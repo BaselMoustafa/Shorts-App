@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shorts_app/dependancies/persons/controllers/get_my_person_cubit/get_my_person_cubit.dart';
 import 'package:shorts_app/features/profile/screens/profile_screen.dart';
 import 'package:shorts_app/core/widgets/screens_with_navigation_bar.dart';
-import 'package:shorts_app/features/search/presentation/screens/search_screen.dart';
+import 'package:shorts_app/features/search/screens/search_screen.dart';
 import '../../features/add_short/add_short_cubit/add_short_cubit.dart';
 import '../../features/add_short/add_short_cubit/add_short_cubit_states.dart';
 import '../../features/add_short/screens/add_short_screen.dart';

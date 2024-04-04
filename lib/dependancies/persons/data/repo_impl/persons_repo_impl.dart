@@ -8,6 +8,7 @@ import 'package:shorts_app/dependancies/persons/domain/repo/persons_repo.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../domain/models/my_person.dart';
+import '../../domain/models/person.dart';
 
 class PersonssRepoImpl extends PersonsRepo{
   final PersonsRemoteDataSource personsRemoteDataSource;
@@ -32,7 +33,10 @@ class PersonssRepoImpl extends PersonsRepo{
   Future<Either<Failure, MyPerson>> getMyPerson() async{
     return await _failureHandler(
       functionToExcute: () async{
-        return await personsRemoteDataSource.getPeron(personsLocalDataSource.userId());
+        return await personsRemoteDataSource.getPeron(
+          personId: personsLocalDataSource.userId(),
+          myPersonId: personsLocalDataSource.userId(),
+        ) as MyPerson;
       },
     );
   }
@@ -43,6 +47,15 @@ class PersonssRepoImpl extends PersonsRepo{
     return await _failureHandler(
       functionToExcute: () async{
         return await personsRemoteDataSource.updateMyPerson(newPeronUpdateInfo);
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<Person>>> searchPersons(String query)async{
+    return await _failureHandler(
+      functionToExcute: () async{
+        return await personsRemoteDataSource.searchPersons(query: query,myPersonId: personsLocalDataSource.userId());
       },
     );
   }
@@ -63,7 +76,6 @@ class PersonssRepoImpl extends PersonsRepo{
   }
 
   @override
-  // TODO: implement props
   List<Object?> get props => [personsLocalDataSource,personsRemoteDataSource,networkConnectionInfo];
 
 }

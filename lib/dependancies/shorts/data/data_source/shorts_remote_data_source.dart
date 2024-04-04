@@ -17,21 +17,24 @@ import 'package:shorts_app/dependancies/shorts/domain/models/short_Info.dart';
 abstract class ShortsRemoteDataSource {
   const ShortsRemoteDataSource();
 
-  Future<List<Short>> getHomeShorts({required String userId,required int limit});
+  Future<List<Short>> getHomeShorts({required String personId,required int limit});
 
   Future<UploadedShortInfo> addShort({required NewShortInfo newShortInfo,});
 
   Future<UploadedComment>addShortComment(NewComment newComment);
 
-  Future<Unit>addShortLike(String userId,Short short);
+  Future<Unit>addShortLike(String personId,Short short);
 
-  Future<Unit>removeShortLike(String userId,Short short);
+  Future<Unit>removeShortLike(String personId,Short short);
   
-  Future<Unit>addShortView(String userId,Short short);
+  Future<Unit>addShortView(String personId,Short short);
 
-  Future<List<UploadedComment>>getShortComments(String shortId);
+  Future<List<UploadedComment>>getShortComments({
+    required String shortId,
+    required String myPersonId,
+  });
 
-  Future<List<Short>>getProfileShorts(String userId);
+  Future<List<Short>>getProfileShorts({required String personId,required String myPeronId});
 }
 
 class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
@@ -69,7 +72,7 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
 
   @override
   Future<List<Short>> getHomeShorts({
-    required String userId,
+    required String personId,
     required int limit,
   }) async{
     return await _tryAndCatchBlock(
@@ -84,13 +87,13 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
           ]
         );
         _currentHomeShoresDocs=result.docs;
-        return await _modelShorts(shorts: result.data, userId: userId);
+        return await _modelShorts(myPersonId: personId,shorts: result.data, personId: personId);
       },
     );
   }
 
   @override
-  Future<List<Short>>getProfileShorts(String userId)async{
+  Future<List<Short>>getProfileShorts({required String personId,required String myPeronId})async{
     
     return await _tryAndCatchBlock(
       message: "Failed To Get Comments", 
@@ -98,11 +101,16 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
         GetCollectionOutput result=await fireStoreHelper.getCollection(
           path: [KConst.shortsCollection],
           fireStoreFilters: [
-            WhereIsEqualTo(fieldName: KConst.from, value: userId),
+            WhereIsEqualTo(fieldName: KConst.from, value: personId),
             const OrderByFilter(filedName: KConst.date,descending: true),
           ]
         );
-        return await _modelShorts(person: await personsRemoteDataSource.getPeron(userId), shorts: result.data, userId: userId);
+        return await _modelShorts(
+          person: await personsRemoteDataSource.getPeron(personId: personId,myPersonId:myPeronId ), 
+          shorts: result.data, 
+          personId: personId,
+          myPersonId: myPeronId
+        );
       },
     );
   }
@@ -110,18 +118,22 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
   Future<List<Short>>_modelShorts({
     Person? person,
     required List<Map<String,dynamic>>shorts,
-    required String userId,
+    required String personId,
+    required String myPersonId
   })async{
     final List<Short>toReturn=[];
     for (var i = 0; i < shorts.length; i++) {
-      shorts[i][KConst.likedByMyPerson]=await _shortLikedByMyPerson(userId,shorts[i]);
+      shorts[i][KConst.likedByMyPerson]=await _shortLikedByMyPerson(personId,shorts[i]);
       shorts[i][KConst.viewsCount]=await _getShortViewsCount(shorts[i]);
       shorts[i][KConst.likesCount]=await _getShortLikesCount(shorts[i]);
       shorts[i][KConst.commentsCount]=await _getShortCommentsCount(shorts[i]);
       toReturn.add(
         Short.fromFireStore(
           map: shorts[i],
-          from:person ??await personsRemoteDataSource.getPeron(shorts[i][KConst.from]),
+          from:person ??await personsRemoteDataSource.getPeron(
+            personId: shorts[i][KConst.from],
+            myPersonId: myPersonId,
+          ),
         )
       );
     }
@@ -143,7 +155,7 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
   }
   
   @override
-  Future<Unit> addShortLike(String userId,Short short) async{
+  Future<Unit> addShortLike(String personId,Short short) async{
     return await _tryAndCatchBlock(
       message:"Failed To Add The Like",
       functionToExcute: () async{
@@ -151,7 +163,7 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
           collectionPath: [KConst.likesShortsCollection], 
           data:{
             KConst.short:short.id,
-            KConst.from:userId,
+            KConst.from:personId,
             KConst.to:short.from.id,
             KConst.date:DateTime.now(),
           },
@@ -162,14 +174,14 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
   }
 
   @override
-  Future<Unit>removeShortLike(String userId,Short short)async{
+  Future<Unit>removeShortLike(String personId,Short short)async{
     return await _tryAndCatchBlock(
       message:"Failed To Remove The Like",
       functionToExcute: () async{
         await fireStoreHelper.deleteCollection(
           collectionPath: [KConst.likesShortsCollection], 
           fireStoreFilters: [
-            WhereIsEqualTo(fieldName: KConst.from, value: userId),
+            WhereIsEqualTo(fieldName: KConst.from, value: personId),
             WhereIsEqualTo(fieldName: KConst.short, value: short.id),
           ]
         );
@@ -179,7 +191,7 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
   }
   
   @override
-  Future<Unit> addShortView(String userId,Short short) async{
+  Future<Unit> addShortView(String personId,Short short) async{
     return await _tryAndCatchBlock(
       message:"Failed To Add The View",
       functionToExcute: () async{
@@ -187,7 +199,7 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
           collectionPath: [KConst.viewsShortsCollection], 
           data:{
             KConst.short:short.id,
-            KConst.from:userId,
+            KConst.from:personId,
             KConst.to:short.from.id,
             KConst.date:DateTime.now(),
           },
@@ -197,11 +209,11 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
     );
   }
 
-  Future<bool> _shortLikedByMyPerson(String userId,Map<String, dynamic> short) async{
+  Future<bool> _shortLikedByMyPerson(String personId,Map<String, dynamic> short) async{
     GetCollectionOutput result= await fireStoreHelper.getCollection(
       path: [KConst.likesShortsCollection],
       fireStoreFilters: [
-        WhereIsEqualTo(fieldName: KConst.from, value:userId),
+        WhereIsEqualTo(fieldName: KConst.from, value:personId),
         WhereIsEqualTo(fieldName: KConst.short, value:short[KConst.id]),
       ],
     );
@@ -236,7 +248,10 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
   }
 
   @override
-  Future<List<UploadedComment>>getShortComments(String shortId)async{
+  Future<List<UploadedComment>>getShortComments({
+    required String shortId,
+    required String myPersonId,
+  })async{
     return await _tryAndCatchBlock(
       message: "Failed To Get Comments", 
       functionToExcute: ()async {
@@ -252,8 +267,14 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
           toReturn.add(
             UploadedComment.fromFireStore(
               map: result.data[i],
-              from:await personsRemoteDataSource.getPeron(result.data[i][KConst.from]), 
-              to:await personsRemoteDataSource.getPeron(result.data[i][KConst.to]), 
+              from:await personsRemoteDataSource.getPeron(
+                myPersonId: myPersonId,
+                personId: result.data[i][KConst.from],
+              ), 
+              to:await personsRemoteDataSource.getPeron(
+                myPersonId: myPersonId,
+                personId: result.data[i][KConst.to],
+              ), 
             ),
           );
         }

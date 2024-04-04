@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shorts_app/core/widgets/profile_image_widget.dart';
+import 'package:shorts_app/dependancies/persons/domain/models/another_person.dart';
 import 'package:shorts_app/dependancies/persons/domain/models/my_person.dart';
 import 'package:shorts_app/dependancies/persons/domain/models/person.dart';
 import 'package:shorts_app/core/models/image_details.dart';
@@ -8,6 +9,7 @@ import 'package:shorts_app/features/profile/controllers/get_profile_shorts_cubit
 import 'package:shorts_app/features/profile/controllers/update_my_person_cubit/update_my_person_cubit.dart';
 import 'package:shorts_app/features/profile/controllers/update_my_person_cubit/update_my_person_cubit_states.dart';
 import 'package:shorts_app/features/profile/widget/edit_profile_button.dart';
+import 'package:shorts_app/features/profile/widget/follow_or_unfollow_person_button.dart';
 import 'package:shorts_app/features/profile/widget/get_profile_shorts_bloc_builder.dart';
 import 'package:shorts_app/features/profile/widget/person_counters_widget.dart';
 import '../../../core/managers/color_manager.dart';
@@ -92,7 +94,7 @@ class _WidgetDesignState extends State<_WidgetDesign> {
             const SizedBox(height: 20,),
             _person is MyPerson?  
               const EditProfileButton()
-              :const EditProfileButton(),
+              :FollowOrUnfollowPersonButton(anotherPerson: _person as AnotherPerson,),
       
             const SizedBox(height: 20,),
             const GetProfileShortsBlocBuilder(),

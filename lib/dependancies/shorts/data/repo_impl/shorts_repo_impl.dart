@@ -40,7 +40,7 @@ class ShortsRepoImpl extends ShortsRepo{
       functionToExcute: () async{
         return await shortsRemoteDataSource.getHomeShorts(
           limit: limit,
-          userId: shortsLocalDataSource.userId(),
+          personId: shortsLocalDataSource.userId(),
         );
       },
     );
@@ -50,7 +50,7 @@ class ShortsRepoImpl extends ShortsRepo{
   Future<Either<Failure,List<Short>>> getProfileShorts(String userId)async{
     return await _failureHandler(
       functionToExcute: () async{
-        return await shortsRemoteDataSource.getProfileShorts(userId);
+        return await shortsRemoteDataSource.getProfileShorts(personId: userId,myPeronId: shortsLocalDataSource.userId());
       },
     );
   }
@@ -100,7 +100,10 @@ class ShortsRepoImpl extends ShortsRepo{
   Future<Either<Failure, List<UploadedComment>>> getShortComments({required String shortId}) async{
     return await _failureHandler(
       functionToExcute: () async{
-        return await shortsRemoteDataSource.getShortComments(shortId);
+        return await shortsRemoteDataSource.getShortComments(
+          shortId: shortId,
+          myPersonId: shortsLocalDataSource.userId(),
+        );
       },
     );
   }

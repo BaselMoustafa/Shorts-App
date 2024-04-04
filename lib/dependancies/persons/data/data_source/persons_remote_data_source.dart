@@ -4,6 +4,7 @@ import 'package:shorts_app/core/constants/constants.dart';
 import 'package:shorts_app/core/error/exceptions.dart';
 import 'package:shorts_app/core/network/firebase/cloud_storage_helper/cloud_storage_helper.dart';
 import 'package:shorts_app/core/network/firebase/fire_store_helper/fire_store_helper.dart';
+import 'package:shorts_app/core/network/firebase/fire_store_helper/get_collection_output.dart';
 import '../../../../core/network/firebase/fire_store_helper/fire_store_filter/where_filter.dart';
 import '../../domain/models/my_person.dart';
 import '../../domain/models/person.dart';
@@ -11,9 +12,10 @@ import '../../domain/models/person_update_Info.dart';
 
 abstract class PersonsRemoteDataSource extends Equatable{
   const PersonsRemoteDataSource();
-  Future<MyPerson >getPeron(String userId);
+  Future<Person>getPeron({required String personId,required String myPersonId});
   Future<Unit >followPerson({required String anotherUserId,required String myUserId});
-  Future<MyPerson >updateMyPerson(NewPeronUpdateInfo newPeronUpdateInfo);
+  Future<MyPerson>updateMyPerson(NewPeronUpdateInfo newPeronUpdateInfo);
+  Future<List<Person>>searchPersons({required String query ,required String myPersonId});
 }
 
 class PersonsRemoteDataSourceImpl extends PersonsRemoteDataSource{
@@ -26,19 +28,26 @@ class PersonsRemoteDataSourceImpl extends PersonsRemoteDataSource{
   });
 
   @override
-  Future<MyPerson> getPeron(String userId)async{
+  Future<Person>getPeron({required String personId,required String myPersonId})async{
     return await _tryAndCatchBlock(
       message: "Failed To Get The Person", 
       functionToExcute: ()async {
-        Map<String,dynamic> myPeron=await fireStoreHelper.getDocument(
-          path: [KConst.personsCollection,userId],
+        Map<String,dynamic> person=await fireStoreHelper.getDocument(
+          path: [KConst.personsCollection,personId],
         );
-        myPeron[KConst.likesCount]= await _likesCount(userId);
-        myPeron[KConst.followersCount]=await _followersCount(userId);
-        myPeron[KConst.followingCount]=await _followingCount(userId);
-        return Person.fromMap(myPersonId: userId, person: myPeron) as MyPerson;
+        await _addPersonCounters(person: person,personId: personId, myPersonId: myPersonId);
+        return Person.fromMap(myPersonId: myPersonId, person: person);
       },
     );
+  }
+
+  Future<void>_addPersonCounters({required Map<String,dynamic>person,required String personId,required String myPersonId})async{
+    if(personId!=myPersonId){
+      person[KConst.followedByMyPerson]=await _followedByMyPerson(myPersonId);
+    }
+    person[KConst.likesCount]= await _likesCount(personId);
+    person[KConst.followersCount]=await _followersCount(personId);
+    person[KConst.followingCount]=await _followingCount(personId);
   }
 
   @override  
@@ -56,6 +65,32 @@ class PersonsRemoteDataSourceImpl extends PersonsRemoteDataSource{
         ); 
         return unit;
       },
+    );
+  }
+
+  @override
+  Future<List<Person>>searchPersons({required String query ,required String myPersonId})async{
+    return await _tryAndCatchBlock(
+      message:"Failed To Get Results", 
+      functionToExcute: ()async{
+        final List<Person>toReturn=[];
+        GetCollectionOutput result=await fireStoreHelper.getCollection(
+          path: [KConst.personsCollection],
+          fireStoreFilters: [
+            WhereArrayContains(fieldName: KConst.searchTerms, value: query),
+          ]
+        );
+        for (var i = 0; i < result.data.length; i++) {
+          await _addPersonCounters(person: result.data[i], personId: result.data[i][KConst.id], myPersonId: myPersonId);
+          toReturn.add(
+            Person.fromMap(
+              myPersonId: myPersonId, 
+              person: result.data[i],
+            )
+          );
+        }
+        return toReturn;
+      }
     );
   }
 
@@ -89,6 +124,16 @@ class PersonsRemoteDataSourceImpl extends PersonsRemoteDataSource{
         return toReturn;
       },
     );
+  }
+
+  Future<bool> _followedByMyPerson(String myPersonId) async{
+    int count= await fireStoreHelper.numOfDocuments(
+      path: [KConst.followsCollection],
+      fireStoreFilters: [
+        WhereIsEqualTo(fieldName: KConst.from, value: myPersonId),
+      ],
+    );
+    return count==1;
   }
 
   Future<int> _likesCount(String userId) async{
