@@ -1,0 +1,69 @@
+import 'package:dartz/dartz.dart';
+import 'package:shorts_app/core/error/failures.dart';
+import 'package:shorts_app/core/network/network_connection_info/network_connection_info.dart';
+import 'package:shorts_app/dependancies/persons/data/data_source/persons_local_data_source.dart';
+import 'package:shorts_app/dependancies/persons/data/data_source/persons_remote_data_source.dart';
+import 'package:shorts_app/dependancies/persons/domain/models/person_update_Info.dart';
+import 'package:shorts_app/dependancies/persons/domain/repo/persons_repo.dart';
+
+import '../../../../core/error/exceptions.dart';
+import '../../domain/models/my_person.dart';
+
+class PersonssRepoImpl extends PersonsRepo{
+  final PersonsRemoteDataSource personsRemoteDataSource;
+  final PersonsLocalDataSource personsLocalDataSource;
+  final NetworkConnectionInfo networkConnectionInfo;
+
+  const PersonssRepoImpl({required this.personsLocalDataSource,required this.personsRemoteDataSource,required this.networkConnectionInfo});
+
+  @override
+  Future<Either<Failure, Unit>> followPerson(String userId) async{
+    return await _failureHandler(
+      functionToExcute: () async{
+        return await personsRemoteDataSource.followPerson(
+          anotherUserId: userId, 
+          myUserId: personsLocalDataSource.userId(),
+        );
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, MyPerson>> getMyPerson() async{
+    return await _failureHandler(
+      functionToExcute: () async{
+        return await personsRemoteDataSource.getPeron(personsLocalDataSource.userId());
+      },
+    );
+  }
+  
+
+  @override
+  Future<Either<Failure, MyPerson>> updateMyPerson(NewPeronUpdateInfo newPeronUpdateInfo) async{
+    return await _failureHandler(
+      functionToExcute: () async{
+        return await personsRemoteDataSource.updateMyPerson(newPeronUpdateInfo);
+      },
+    );
+  }
+
+  Future<Either<Failure,T>>_failureHandler<T>({
+    required Future<T> Function() functionToExcute,
+  })async{
+    if(await networkConnectionInfo.isConnected){
+      try {
+        return Right(await functionToExcute());
+      } on RemoteDataBaseException catch (ex) {
+        return Left(RemoteDataBaseFailure(message: ex.message));
+      } on LocalDataBaseException catch (ex){
+        return Left(LocalDataBaseFailure(message: ex.message));
+      }
+    }
+    return const Left(OfflineFailure());
+  }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [personsLocalDataSource,personsRemoteDataSource,networkConnectionInfo];
+
+}

@@ -1,0 +1,31 @@
+abstract class KConst{
+  static const String dataBoxName="dataBoxName";
+  static const String userId="userId";
+  static const String authanticationMethod="authanticationMethod";
+  static const String myPerson="myPerson";
+  static const String personsCollection="personsCollection";
+  static const String likesShortsCollection="likesShortsCollection";
+  static const String commentsShortsCollection="commentsShortsCollection";
+  static const String followsCollection="followsCollection";
+  static const String viewsShortsCollection="viewsShortsCollection";
+  static const String shortsCollection="shortsCollection";
+  static const String from="from";
+  static const String to="to";
+  static const String id="id";
+  static const String name="name";
+  static const String bio="bio";
+  static const String image="image";
+  static const String likesCount="likesCount";
+  static const String followingCount="followingCount";
+  static const String followersCount="followersCount";
+  static const String followedByMyPerson="followedByMyPerson";
+  static const String emailIsVerified="emailIsVerified";
+  static const String url="url";
+  static const String viewsCount="viewsCount";
+  static const String likedByMyPerson="likedByMyPerson";
+  static const String caption="caption";
+  static const String commentsCount="commentsCount";
+  static const String date="date";
+  static const String short="short";
+  static const String content="content";
+}
