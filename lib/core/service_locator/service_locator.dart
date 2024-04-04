@@ -9,6 +9,7 @@ import 'package:shorts_app/dependancies/persons/data/repo_impl/persons_repo_impl
 import 'package:shorts_app/dependancies/persons/domain/repo/persons_repo.dart';
 import 'package:shorts_app/dependancies/persons/domain/usecases/follow_person_usecase.dart';
 import 'package:shorts_app/dependancies/persons/domain/usecases/get_my_person_usecase.dart';
+import 'package:shorts_app/dependancies/persons/domain/usecases/serach_persons_usecase.dart';
 import 'package:shorts_app/dependancies/persons/domain/usecases/update_my_person_usecase.dart';
 import 'package:shorts_app/dependancies/shorts/controllers/add_or_remove_short_like_cubit/add_or_remove_short_like_cubit.dart';
 import 'package:shorts_app/dependancies/shorts/controllers/add_short_comment_cubit/add_short_comment_cubit.dart';
@@ -40,6 +41,7 @@ import 'package:shorts_app/features/home/get_home_shorts_cubit/get_home_shorts_c
 import 'package:shorts_app/features/profile/controllers/follow_person_cubit/follow_person_cubit.dart';
 import 'package:shorts_app/features/profile/controllers/get_profile_shorts_cubit/get_profile_shorts_cubit.dart';
 import 'package:shorts_app/features/profile/controllers/update_my_person_cubit/update_my_person_cubit.dart';
+import 'package:shorts_app/features/search/search_persons_cubit/search_persons_cubit.dart';
 import '../../dependancies/persons/data/data_source/persons_local_data_source.dart';
 import '../../dependancies/persons/data/data_source/persons_remote_data_source.dart';
 import '../../features/authantication/presentation/controllers/email_authantication_cubit/email_authantication_cubit.dart';
@@ -74,6 +76,8 @@ class ServiceLocator {
     getIt.registerFactory(() => FollowPersonCubit(followPersonUsecase: getIt()));
     getIt.registerFactory(() => UpdateMyPersonCubit(updateMyPersonUsecase: getIt()));
     getIt.registerFactory(() => GetProfileShortsCubit(getProfileShortsUsecase: getIt()));
+    //Search
+    getIt.registerFactory(() => SearchPersonsCubit(searchPersonsUseCase: getIt()));
 
     //===================================USECASES==================================================
     //Authantication
@@ -86,6 +90,7 @@ class ServiceLocator {
     getIt.registerLazySingleton(() => GetMyPersonUseCase(personsRepo: getIt(),),);
     getIt.registerLazySingleton(() => UpdateMyPersonUseCase(personsRepo: getIt(),),);
     getIt.registerLazySingleton(() => FollowPersonUsecase(personsRepo: getIt(),),);
+    getIt.registerLazySingleton(() => SearchPersonsUseCase(personsRepo: getIt(),),);
     //SHORTS
     getIt.registerLazySingleton(() => GetHomeShortsUsecase(shortsRepo: getIt(),),);
     getIt.registerLazySingleton(() => GetProfileShortsUsecase(shortsRepo: getIt(),),);

@@ -18,8 +18,9 @@ class TextFormFieldProperties {
   final int? maxLines;
   final TextInputType? keyboardType;
   final VoidCallback? onTap;
-
+  final bool disabled;
   const TextFormFieldProperties({
+    this.disabled=false,
     this.obscureText=false,
     this.prefixIcon,
     this.suffixIcon,
@@ -49,6 +50,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: textFormFieldProperties.disabled,
       obscureText: textFormFieldProperties.obscureText,
       maxLength: textFormFieldProperties.maxLength,
       onTap:textFormFieldProperties.onTap,
@@ -74,6 +76,7 @@ class CustomTextFormField extends StatelessWidget {
       labelText: textFormFieldProperties.labelText,
       labelStyle: Theme.of(context).textTheme.headlineMedium,
       contentPadding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
+      disabledBorder:_cutomBorder(ColorManager.white, 2) ,
       enabledBorder: _cutomBorder(ColorManager.white, 2),
       focusedBorder: _cutomBorder(ColorManager.primary, 2),
       focusedErrorBorder: _cutomBorder(ColorManager.white, 2),

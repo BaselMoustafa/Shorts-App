@@ -71,7 +71,7 @@ class MyPerson extends Person{
   List<String>get _seachTerms{
     final List<String>toReturn=[];
     for (var i = 0; i < name.length; i++) {
-      toReturn.add(name.substring(0,i+1));
+      toReturn.add(name.substring(0,i+1).toLowerCase());
     }
     return toReturn;
   }

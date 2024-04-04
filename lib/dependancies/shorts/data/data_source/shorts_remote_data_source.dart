@@ -123,7 +123,7 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
   })async{
     final List<Short>toReturn=[];
     for (var i = 0; i < shorts.length; i++) {
-      shorts[i][KConst.likedByMyPerson]=await _shortLikedByMyPerson(personId,shorts[i]);
+      shorts[i][KConst.likedByMyPerson]=await _shortLikedByMyPerson(myPersonId,shorts[i]);
       shorts[i][KConst.viewsCount]=await _getShortViewsCount(shorts[i]);
       shorts[i][KConst.likesCount]=await _getShortLikesCount(shorts[i]);
       shorts[i][KConst.commentsCount]=await _getShortCommentsCount(shorts[i]);
