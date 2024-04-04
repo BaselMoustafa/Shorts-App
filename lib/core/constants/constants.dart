@@ -28,4 +28,5 @@ abstract class KConst{
   static const String date="date";
   static const String short="short";
   static const String content="content";
+  static const String searchTerms="searchTerms";
 }

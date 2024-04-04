@@ -65,7 +65,16 @@ class MyPerson extends Person{
     KConst.id:id,
     KConst.name:name,
     KConst.image:image,
+    KConst.searchTerms:_seachTerms,
   };
+
+  List<String>get _seachTerms{
+    final List<String>toReturn=[];
+    for (var i = 0; i < name.length; i++) {
+      toReturn.add(name.substring(0,i+1));
+    }
+    return toReturn;
+  }
 
   @override
   List<Object?> get props => [
