@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shorts_app/core/widgets/short_widget/base_short_action_button.dart';
 import 'package:shorts_app/dependancies/shorts/domain/models/short.dart';
 
@@ -14,5 +15,9 @@ class ShareShortButton extends StatelessWidget {
     );
   }
 
-  void _onTap(){}
+  void _onTap(){
+    Share.shareWithResult(
+      "${short.caption}\nVideo: ${short.url}",
+    );
+  }
 }
