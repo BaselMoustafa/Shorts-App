@@ -50,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ], 
       child: BlocBuilder<GetHomeShortsCubit,GetHomeShortsStates>(
         builder: (context, state) {
+          print('At The home Screeen Shorts Builder=================');
           if(state is GetHomeShortsSuccessState){
             _shorts=state.shorts;
             if(_shorts.isEmpty){

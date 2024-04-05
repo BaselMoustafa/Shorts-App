@@ -9,9 +9,9 @@ import 'package:shorts_app/core/widgets/short_widget/short_video_widget.dart';
 import 'package:video_player/video_player.dart';
 
 class ShortWidget extends StatefulWidget {
-  const ShortWidget({super.key,required this.short});
+  const ShortWidget({super.key,required this.short,this.onTapInfoWidget});
   final Short short;
-
+  final VoidCallback? onTapInfoWidget;
   @override
   State<ShortWidget> createState() => _ShortWidgetState();
 }
@@ -39,7 +39,7 @@ class _ShortWidgetState extends State<ShortWidget> {
           width: MediaQuery.of(context).size.width,
           child: ShortVideoWidget(videoController:_videoController),
         ),
-        ShortInfoWidget(short:widget.short),
+        ShortInfoWidget(short:widget.short,onTap: widget.onTapInfoWidget,),
         ShortActionsWidget(short:widget.short),
         Align(
           alignment: Alignment.bottomCenter,

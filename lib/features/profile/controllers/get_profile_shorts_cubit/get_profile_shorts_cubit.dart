@@ -55,6 +55,9 @@ class GetProfileShortsCubit extends Cubit<GetProfileShortsStates>{
         _shorts[i]=_shorts[i].replaceThePerson(person);
       }
     }
+    if(state is GetProfileShortsSuccessState){
+      emit(GetProfileShortsSuccessState(shorts: _shorts));
+    }
   }
 
   void tryToGetAgain()async{

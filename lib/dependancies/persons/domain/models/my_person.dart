@@ -48,6 +48,28 @@ class MyPerson extends Person{
     );
   }
 
+  MyPerson decreamentFollwingCount()=>MyPerson(
+    emailIsVerified: emailIsVerified, 
+    bio: bio, 
+    id: id, 
+    name: name, 
+    image: image, 
+    likesCount: likesCount, 
+    followersCount: followersCount, 
+    followingCount: followingCount-1,
+  );
+
+  MyPerson increamentFollwingCount()=>MyPerson(
+    emailIsVerified: emailIsVerified, 
+    bio: bio, 
+    id: id, 
+    name: name, 
+    image: image, 
+    likesCount: likesCount, 
+    followersCount: followersCount, 
+    followingCount: followingCount+1,
+  );
+
   Map<String,dynamic>toMap()=>{
     KConst.emailIsVerified:emailIsVerified,
     KConst.bio:bio,

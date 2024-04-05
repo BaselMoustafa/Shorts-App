@@ -3,41 +3,41 @@ import 'package:shorts_app/core/models/image_details.dart';
 import 'package:shorts_app/core/widgets/profile_image_widget.dart';
 import 'package:shorts_app/dependancies/shorts/domain/models/short.dart';
 import 'package:shorts_app/features/profile/screens/profile_screen.dart';
-
 import '../../managers/navigator_manager.dart';
 
 class ShortInfoWidget extends StatelessWidget {
-  const ShortInfoWidget({super.key,required this.short});
+  const ShortInfoWidget({super.key,required this.short,this.onTap});
   final Short short;
+  final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) {
     return PositionedDirectional(
       start: 10,
       bottom: 30,
-      child:_WidgetDesign(short: short,),
+      child:_WidgetDesign(shortInfoWidget: this,),
     );
   }
 }
 
 class _WidgetDesign extends StatelessWidget {
   const _WidgetDesign({
-    required this.short,
+    required this.shortInfoWidget,
   });
-  final Short short;
+  final ShortInfoWidget shortInfoWidget;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => NavigatorManager.push(context: context, widget:ProfileScreen(person: short.from,asScaffold: true,),),
+      onTap: () =>shortInfoWidget.onTap!=null? shortInfoWidget.onTap!(): NavigatorManager.push(context: context, widget:ProfileScreen(person: shortInfoWidget.short.from,asScaffold: true,),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _ShortOwnerInfo(short: short,),
+          _ShortOwnerInfo(short: shortInfoWidget.short,),
           
-          if(short.caption!=null)
+          if(shortInfoWidget.short.caption!=null)
           Padding(
             padding: const EdgeInsets.only(top: 5),
-            child: _ShortDescribtion(short: short,),
+            child: _ShortDescribtion(short: shortInfoWidget.short,),
           ),
         ],
       ),

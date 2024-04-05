@@ -58,5 +58,8 @@ class GetHomeShortsCubit extends Cubit<GetHomeShortsStates>{
         _shorts[i]=_shorts[i].replaceThePerson(person);
       }
     }
+    if(state is GetHomeShortsSuccessState){
+      emit(GetHomeShortsSuccessState(shorts: _shorts));
+    }
   }
 }

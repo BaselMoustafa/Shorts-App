@@ -7,6 +7,7 @@ import 'package:shorts_app/dependancies/persons/domain/models/person_update_Info
 import 'package:shorts_app/dependancies/persons/domain/repo/persons_repo.dart';
 
 import '../../../../core/error/exceptions.dart';
+import '../../domain/models/another_person.dart';
 import '../../domain/models/my_person.dart';
 import '../../domain/models/person.dart';
 
@@ -18,13 +19,13 @@ class PersonssRepoImpl extends PersonsRepo{
   const PersonssRepoImpl({required this.personsLocalDataSource,required this.personsRemoteDataSource,required this.networkConnectionInfo});
 
   @override
-  Future<Either<Failure, Unit>> followPerson(String userId) async{
+  Future<Either<Failure,Unit>>followOrUnfollowPerson({required AnotherPerson anotherPerson})async{
     return await _failureHandler(
       functionToExcute: () async{
-        return await personsRemoteDataSource.followPerson(
-          anotherUserId: userId, 
-          myUserId: personsLocalDataSource.userId(),
-        );
+        String myPersonId=personsLocalDataSource.userId();
+        return anotherPerson.followedByMyPerson? 
+          await personsRemoteDataSource.unFollowPerson(anotherUserId: anotherPerson.id, myUserId: myPersonId)
+          :await personsRemoteDataSource.followPerson(anotherUserId: anotherPerson.id, myUserId: myPersonId);
       },
     );
   }

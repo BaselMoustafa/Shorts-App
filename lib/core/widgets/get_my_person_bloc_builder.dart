@@ -28,7 +28,8 @@ class _GetMtPersonBlocBuilderState extends State<GetMtPersonBlocBuilder> {
   Widget build(BuildContext context) {
     return BlocBuilder<GetMyPersonCubit,GetMyPersonCubitStates>(
       builder: (context, state) {
-        print("Get My Person Builderrrrrr");
+        
+        
         if(state is GetMyPersonSuccessState){
           return const MainLayoutWidget();
         }

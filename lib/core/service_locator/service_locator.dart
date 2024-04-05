@@ -7,7 +7,7 @@ import 'package:shorts_app/core/network/firebase/firebase_auth_helper/firebase_a
 import 'package:shorts_app/core/network/network_connection_info/network_connection_info.dart';
 import 'package:shorts_app/dependancies/persons/data/repo_impl/persons_repo_impl.dart';
 import 'package:shorts_app/dependancies/persons/domain/repo/persons_repo.dart';
-import 'package:shorts_app/dependancies/persons/domain/usecases/follow_person_usecase.dart';
+import 'package:shorts_app/dependancies/persons/domain/usecases/follow_or_unfollow_person_usecase.dart';
 import 'package:shorts_app/dependancies/persons/domain/usecases/get_my_person_usecase.dart';
 import 'package:shorts_app/dependancies/persons/domain/usecases/serach_persons_usecase.dart';
 import 'package:shorts_app/dependancies/persons/domain/usecases/update_my_person_usecase.dart';
@@ -38,7 +38,7 @@ import 'package:shorts_app/features/authantication/Domain/usecases/sign_in_with_
 import 'package:shorts_app/features/authantication/Domain/usecases/sign_up_with_email_and_password_usecase.dart';
 import 'package:shorts_app/features/authantication/presentation/controllers/google_authantication_cubit/google_authantication_cubit.dart';
 import 'package:shorts_app/features/home/get_home_shorts_cubit/get_home_shorts_cubit.dart';
-import 'package:shorts_app/features/profile/controllers/follow_person_cubit/follow_person_cubit.dart';
+import 'package:shorts_app/features/profile/controllers/follow_person_cubit/follow_or_unfollow_person_cubit.dart';
 import 'package:shorts_app/features/profile/controllers/get_profile_shorts_cubit/get_profile_shorts_cubit.dart';
 import 'package:shorts_app/features/profile/controllers/update_my_person_cubit/update_my_person_cubit.dart';
 import 'package:shorts_app/features/search/search_persons_cubit/search_persons_cubit.dart';
@@ -73,7 +73,7 @@ class ServiceLocator {
     //Add Short
     getIt.registerFactory(() => AddShortCubit(addShortUsecase: getIt()));
     //Profile
-    getIt.registerFactory(() => FollowPersonCubit(followPersonUsecase: getIt()));
+    getIt.registerFactory(() => FollowOrUnfollowPersonCubit(followOrUnfollowPersonUsecase: getIt()));
     getIt.registerFactory(() => UpdateMyPersonCubit(updateMyPersonUsecase: getIt()));
     getIt.registerFactory(() => GetProfileShortsCubit(getProfileShortsUsecase: getIt()));
     //Search
@@ -89,7 +89,7 @@ class ServiceLocator {
     //PERSONS
     getIt.registerLazySingleton(() => GetMyPersonUseCase(personsRepo: getIt(),),);
     getIt.registerLazySingleton(() => UpdateMyPersonUseCase(personsRepo: getIt(),),);
-    getIt.registerLazySingleton(() => FollowPersonUsecase(personsRepo: getIt(),),);
+    getIt.registerLazySingleton(() => FollowOrUnfollowPersonUsecase(personsRepo: getIt(),),);
     getIt.registerLazySingleton(() => SearchPersonsUseCase(personsRepo: getIt(),),);
     //SHORTS
     getIt.registerLazySingleton(() => GetHomeShortsUsecase(shortsRepo: getIt(),),);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shorts_app/core/managers/navigator_manager.dart';
 import 'package:shorts_app/dependancies/shorts/domain/models/short.dart';
 import 'package:shorts_app/core/widgets/short_widget/short_widget.dart';
 import 'package:shorts_app/core/managers/color_manager.dart';
@@ -13,6 +14,9 @@ class ShortScreen extends StatelessWidget {
       appBar: AppBar(backgroundColor: ColorManager.transparent,),
       body:ShortWidget(
         short: short,
+        onTapInfoWidget: () {
+          NavigatorManager.pop(context: context);
+        },
       ),
     );
   }

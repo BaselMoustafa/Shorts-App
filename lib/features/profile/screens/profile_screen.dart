@@ -13,6 +13,7 @@ import 'package:shorts_app/features/profile/widget/follow_or_unfollow_person_but
 import 'package:shorts_app/features/profile/widget/get_profile_shorts_bloc_builder.dart';
 import 'package:shorts_app/features/profile/widget/person_counters_widget.dart';
 import '../../../core/managers/color_manager.dart';
+import '../../../dependancies/persons/controllers/get_my_person_cubit/get_my_person_cubit.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key,required this.person,this.asScaffold=false});
@@ -47,7 +48,7 @@ class _WidgetDesignState extends State<_WidgetDesign> {
   @override
   void initState() {
     super.initState();
-    _person=widget.person;
+    _person=widget.person is AnotherPerson?widget.person:GetMyPersonCubit.myPerson;
   }
 
   @override
@@ -58,6 +59,8 @@ class _WidgetDesignState extends State<_WidgetDesign> {
 
   @override
   Widget build(BuildContext context) {
+    print("Build Of Profile===>${_person.followingCount}");
+    print("Build Of Profile===>${GetMyPersonCubit.myPerson.followingCount}");
     return BlocListener<UpdateMyPersonCubit,UpdateMyPersonStates>(
       listener: (context, state) {
         if(state is UpdateMyPersonSuccess&& _person.id==state.myPerson.id){

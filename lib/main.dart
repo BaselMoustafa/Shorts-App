@@ -10,6 +10,7 @@ import 'package:shorts_app/features/authantication/presentation/controllers/emai
 import 'package:shorts_app/features/authantication/presentation/controllers/google_authantication_cubit/google_authantication_cubit.dart';
 import 'package:shorts_app/features/authantication/presentation/screens/splash_screen.dart';
 import 'package:shorts_app/features/home/get_home_shorts_cubit/get_home_shorts_cubit.dart';
+import 'package:shorts_app/features/profile/controllers/follow_person_cubit/follow_or_unfollow_person_cubit.dart';
 import 'package:shorts_app/features/profile/controllers/get_profile_shorts_cubit/get_profile_shorts_cubit.dart';
 import 'package:shorts_app/features/profile/controllers/update_my_person_cubit/update_my_person_cubit.dart';
 import 'package:shorts_app/features/search/screens/search_screen.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context)=>getIt<GetProfileShortsCubit>()),
         BlocProvider(create: (context)=>getIt<UpdateMyPersonCubit>()),
         BlocProvider(create: (context)=>getIt<SearchPersonsCubit>()),
+        BlocProvider(create: (context)=>getIt<FollowOrUnfollowPersonCubit>()),
       ], 
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

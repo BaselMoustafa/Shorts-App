@@ -14,6 +14,28 @@ class AnotherPerson extends Person{
     required super.followingCount,
   });
 
+  AnotherPerson follow()=>AnotherPerson(
+    followedByMyPerson: true, 
+    followersCount:followersCount+1,
+    bio: bio, 
+    id: id, 
+    name: name, 
+    image: image, 
+    likesCount: likesCount, 
+    followingCount: followingCount
+  );
+
+  AnotherPerson unFollow()=>AnotherPerson(
+    followedByMyPerson: false, 
+    followersCount:followersCount-1,
+    bio: bio, 
+    id: id, 
+    name: name, 
+    image: image, 
+    likesCount: likesCount, 
+    followingCount: followingCount
+  );
+
   @override
   List<Object?> get props => [
     followedByMyPerson,

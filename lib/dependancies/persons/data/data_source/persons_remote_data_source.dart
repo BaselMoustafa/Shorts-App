@@ -14,6 +14,7 @@ abstract class PersonsRemoteDataSource extends Equatable{
   const PersonsRemoteDataSource();
   Future<Person>getPeron({required String personId,required String myPersonId});
   Future<Unit >followPerson({required String anotherUserId,required String myUserId});
+  Future<Unit >unFollowPerson({required String anotherUserId,required String myUserId});
   Future<MyPerson>updateMyPerson(NewPeronUpdateInfo newPeronUpdateInfo);
   Future<List<Person>>searchPersons({required String query ,required String myPersonId});
 }
@@ -63,6 +64,23 @@ class PersonsRemoteDataSourceImpl extends PersonsRemoteDataSource{
             KConst.to:anotherUserId,
           },
         ); 
+        return unit;
+      },
+    );
+  }
+
+  @override
+  Future<Unit>unFollowPerson({required String anotherUserId,required String myUserId})async{
+    return await _tryAndCatchBlock(
+      message: "Failed To Unfollow This Person", 
+      functionToExcute: () async{
+        await fireStoreHelper.deleteCollection(
+          collectionPath: [KConst.followsCollection], 
+          fireStoreFilters: [
+            WhereIsEqualTo(fieldName: KConst.from, value: myUserId),
+            WhereIsEqualTo(fieldName: KConst.to, value: anotherUserId),
+          ]
+        );
         return unit;
       },
     );
