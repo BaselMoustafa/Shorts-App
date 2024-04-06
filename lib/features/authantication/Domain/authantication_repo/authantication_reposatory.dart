@@ -10,4 +10,5 @@ abstract class AuthanticationReposatory extends Equatable{
   Future<Either<Failure,bool>>checkEmailVerification();
   Future<Either<Failure,Unit>>signInWithGoogle();
   Future<Either<Failure,UserCredential>>signInWithEmailAndPassword({required String email,required String password});
+  Future<Either<Failure,Unit>>signOut();
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:shorts_app/core/managers/assets_manager.dart';
 import 'package:shorts_app/core/widgets/custom_button.dart';
 import '../../../../core/managers/color_manager.dart';
 import '../controllers/google_authantication_cubit/google_authantication_cubit.dart';
@@ -25,19 +27,19 @@ class _ButtonDesign extends StatelessWidget {
   const _ButtonDesign();
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          height: 35,
-          width: 35,
-          child: Icon(Icons.person),
+          height: 25,
+          width: 25,
+          child:Image.asset(AssetsManager.google),
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
-        Text(
+        const Text(
           "Use Google Account",
           style: TextStyle(
             color: ColorManager.white,

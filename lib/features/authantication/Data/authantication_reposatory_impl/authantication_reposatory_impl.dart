@@ -82,6 +82,18 @@ class AuthanticationReposatoryImpl extends AuthanticationReposatory{
       },
     );
   }
+
+  @override
+  Future<Either<Failure, Unit>> signOut() async{
+    return _failureHandler(
+      functionToExcute: () async{
+        AuthanticationMethod authanticationMethod=await authanticationLocalDataSource.getAuthanticationMethod();
+        await authanticationRemoteDataSource.signOut(authanticationMethod);
+        await authanticationLocalDataSource.deleteLocalData();
+        return unit;
+      },
+    );
+  }
   
   Future<void>_whenVerifyPersonEmail(String userId)async{
     await authanticationRemoteDataSource.markPersonEmailAsVerified(userId);

@@ -17,6 +17,7 @@ class _PasswordFormFieldState extends State<PasswordFormField> {
   Widget build(BuildContext context) {
     return CustomTextFormField(
       textFormFieldProperties: TextFormFieldProperties(
+        prefixIcon:const Icon(Icons.lock,color: ColorManager.white,),
         validator: hasNotToBeEmpty,
         obscureText: ! _isVisible,
         controller: widget.passwordController,

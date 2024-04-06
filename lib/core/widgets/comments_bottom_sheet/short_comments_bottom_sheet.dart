@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shorts_app/core/widgets/comments_bottom_sheet/add_short_comment_button.dart';
 import 'package:shorts_app/core/widgets/comments_bottom_sheet/short_comment_form_filed.dart';
 import 'package:shorts_app/dependancies/shorts/domain/models/short.dart';
@@ -21,18 +19,18 @@ class ShortCommentsBottomSheet extends StatelessWidget {
           child: GestureDetector(
             onTap: () => NavigatorManager.pop(context: context),
             child: Container(
-              color: ColorManager.red,
+              color: ColorManager.transparent,
               height:0.2* MediaQuery.of(context).size.height,
             ),
           ),
         ),
-        _CommentsCountWidget(),
+        const _CommentsCountWidget(),
         
         Expanded(
           child: Container(
             width: double.infinity,
             color: ColorManager.darkWhite,
-            child: ShortCommentsListView()
+            child:const ShortCommentsListView()
           ),
         ),
         _AddCommentWigdet(short: short,)
@@ -49,11 +47,14 @@ class _CommentsCountWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      decoration: BoxDecorationManager.solidRoundedTopOnly,
+      decoration: BoxDecorationManager.solidRoundedTopOnly.copyWith(color: ColorManager.darkWhite),
       child: Stack(
         alignment: Alignment.center,
         children: [
-          const Text("Comments"),
+          Text(
+            "Comments",
+            style: Theme.of(context).textTheme.headlineLarge,
+          ),
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(

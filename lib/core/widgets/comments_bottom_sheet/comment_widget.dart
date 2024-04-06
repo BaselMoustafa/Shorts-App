@@ -62,7 +62,7 @@ class _PersonNameAndDate extends StatelessWidget {
       children: [
         Text(
           comment.from.name,
-          style:const TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+          style:Theme.of(context).textTheme.headlineLarge,
         ),
         const Spacer(),
         Text(timeDifferenceAsString(date: comment.date))

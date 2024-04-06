@@ -7,7 +7,7 @@ import 'package:shorts_app/dependancies/shorts/domain/models/short_Info.dart';
 
 abstract class ShortsRepo extends Equatable{
   const ShortsRepo();
-  Future<Either<Failure,List<Short>>> getHomeShorts({required int limit});
+  Future<Either<Failure,List<Short>>> getHomeShorts({required bool isFirstGet,required int limit});
   Future<Either<Failure,List<Short>>> getProfileShorts(String userId);
   Future<Either<AddShortFailure, Short>> addShort({required NewShortInfo newShortInfo});
   Future<Either<Failure,UploadedComment>> addShortComment({required Short short,required NewComment newComment});

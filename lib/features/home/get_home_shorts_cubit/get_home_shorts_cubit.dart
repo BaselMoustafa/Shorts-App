@@ -16,24 +16,35 @@ class GetHomeShortsCubit extends Cubit<GetHomeShortsStates>{
 
   static GetHomeShortsCubit get(BuildContext context)=>BlocProvider.of(context);
 
-  final int _limit=2;
+  static double? currentPageAtHomePageView;
+
+  final int _limit=5;
   List<Short>_shorts=[];
   bool _maxLimitReached=false;
 
   get atLoadingState=>state is GetHomeShortsLoadingState;
 
+  void init(){
+    _shorts=[];
+    currentPageAtHomePageView=null;
+    _maxLimitReached=false;
+    emit(GetHomeShortsInitialState());
+  }
 
   Future<void>getHomeShorts()async{
     if(_maxLimitReached){
-      emit(GetHomeShortsFailedState(message: "There Are No More Shorts"));
+      emit(GetHomeShortsFailedState(message: "There Are No More Shorts",shorts: _shorts));
       return ;
     }
     emit(GetHomeShortsLoadingState());
-    Either<Failure,List<Short>>uploadedOrFailure= await getHomeShortsUsecase.excute(limit: _limit);
+    Either<Failure,List<Short>>uploadedOrFailure= await getHomeShortsUsecase.excute(
+      isFirstGet: state is GetHomeShortsInitialState,
+      limit: _limit,
+    );
+    
     uploadedOrFailure.fold(
       (Failure failure){
-        
-        emit(GetHomeShortsFailedState(message: failure.message));
+        emit(GetHomeShortsFailedState(message: failure.message,shorts: _shorts));
       }, 
       (List<Short> shorts){
         if(shorts.length<_limit){
@@ -49,6 +60,9 @@ class GetHomeShortsCubit extends Cubit<GetHomeShortsStates>{
     int index=_shorts.indexWhere((Short element) => element.id==short.id);
     if(index!=-1){
       _shorts[index]=short;
+    }
+    if(state is GetHomeShortsSuccessState){
+      emit(GetHomeShortsSuccessState(shorts: _shorts));
     }
   }
 

@@ -62,13 +62,16 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> with WidgetsB
         width: MediaQuery.of(context).size.width,
         child: Builder(
           builder: (context) {
-            if(state is CameraInitializationLoading)
-            return  LoadingWidget();
-            if(state is CameraInitializationSuccess)
-            return CameraPreview(CustomCameraController.instance.cameraController);
-            if(state is CameraInitializationFailed)
-            return _ExceptionWidget(cameraInitializationFailed: state);
-            return SizedBox();
+            if(state is CameraInitializationLoading){
+              return const LoadingWidget();
+            }
+            if(state is CameraInitializationSuccess){
+              return CameraPreview(CustomCameraController.instance.cameraController);
+            }
+            if(state is CameraInitializationFailed){
+              return _ExceptionWidget(cameraInitializationFailed: state);
+            }
+            return const SizedBox();
           },
         ),
       ),
@@ -93,12 +96,16 @@ class _RequestPermissionsButton extends StatelessWidget {
   const _RequestPermissionsButton();
   @override
   Widget build(BuildContext context) {
-    return CustomButton(
-      onTap: ()=>PermissionHandlerManager.excuteAfterCheckPermission(
-        toExcute: ()=>CustomCameraController.instance.initCameraController(),
-        permissionsList:const PermissionsList(permissions: [Permission.microphone,Permission.camera]), 
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: CustomButton(
+        height: 45,
+        onTap: ()=>PermissionHandlerManager.excuteAfterCheckPermission(
+          toExcute: ()=>CustomCameraController.instance.initCameraController(),
+          permissionsList:const PermissionsList(permissions: [Permission.microphone,Permission.camera]), 
+        ),
+        child:const Text("Give Us The Permissions"), 
       ),
-      child:const Text("Give Us The Permissions"), 
     );
   }
 }

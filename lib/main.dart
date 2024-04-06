@@ -12,8 +12,8 @@ import 'package:shorts_app/features/authantication/presentation/screens/splash_s
 import 'package:shorts_app/features/home/get_home_shorts_cubit/get_home_shorts_cubit.dart';
 import 'package:shorts_app/features/profile/controllers/follow_person_cubit/follow_or_unfollow_person_cubit.dart';
 import 'package:shorts_app/features/profile/controllers/get_profile_shorts_cubit/get_profile_shorts_cubit.dart';
+import 'package:shorts_app/features/profile/controllers/signout_cubit/sign_out_cubit.dart';
 import 'package:shorts_app/features/profile/controllers/update_my_person_cubit/update_my_person_cubit.dart';
-import 'package:shorts_app/features/search/screens/search_screen.dart';
 import 'package:shorts_app/features/search/search_persons_cubit/search_persons_cubit.dart';
 import 'core/managers/theme_manager.dart';
 
@@ -40,14 +40,13 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context)=>getIt<UpdateMyPersonCubit>()),
         BlocProvider(create: (context)=>getIt<SearchPersonsCubit>()),
         BlocProvider(create: (context)=>getIt<FollowOrUnfollowPersonCubit>()),
+        BlocProvider(create: (context)=>getIt<SignOutCubit>()),
       ], 
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme:ThemeManager.lightTheme,
-        home:const Scaffold(
-          body: SplashScreen(),
-        ),
+        home:const SplashScreen(),
       ),
     );
   }

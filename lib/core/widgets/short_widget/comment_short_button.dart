@@ -8,8 +8,6 @@ import 'package:shorts_app/dependancies/shorts/controllers/add_short_comment_cub
 import 'package:shorts_app/dependancies/shorts/controllers/add_short_comment_cubit/add_short_comment_cubit_states.dart';
 import 'package:shorts_app/dependancies/shorts/controllers/get_short_comments_cubit/get_short_comments_cubit.dart';
 import 'package:shorts_app/dependancies/shorts/domain/models/short.dart';
-import 'package:shorts_app/features/home/get_home_shorts_cubit/get_home_shorts_cubit.dart';
-import 'package:shorts_app/features/profile/controllers/get_profile_shorts_cubit/get_profile_shorts_cubit.dart';
 
 class CommentShortButton extends StatefulWidget {
   const CommentShortButton({super.key,required this.short});
@@ -31,30 +29,27 @@ class _CommentShortButtonState extends State<CommentShortButton> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AddShortCommentCubit,AddShortCommentStates>(
-      listener: (context, state) {
-        
-        if(state is AddShortCommentLoading && state.short.id==_short.id){
-          setState(() {
-            _short=state.short;
-          });
-          GetShortCommentsCubit.get(context).addComment(state.newComment);
-          GetHomeShortsCubit.get(context).replaceThisShort(state.short);
-          GetProfileShortsCubit.get(context).replaceThisShort(state.short);
-        }else if(state is AddShortCommentFailed && state.short.id==_short.id){
-          setState(() {
-            _short=state.short;
-          });
-          GetShortCommentsCubit.get(context).removeComment(state.newComment);
-          GetHomeShortsCubit.get(context).replaceThisShort(state.short);
-          GetProfileShortsCubit.get(context).replaceThisShort(state.short);
-        }
-      },
+      listener: _addShortCommentBlocListener,
       child: BaseShortActionButton(
         onTap: _onTap, 
         text: fromCounterToString(_short.commentsCount), 
         icon: const Icon(Icons.comment,size: 40,),
       ),
     );
+  }
+
+  void _addShortCommentBlocListener(context, state) {
+    if(state is AddShortCommentLoading && state.short.id==_short.id){
+      _refreshTheScreen(state.short);
+    }else if(state is AddShortCommentFailed && state.short.id==_short.id){
+      _refreshTheScreen(state.short);
+    }
+  }
+
+  void _refreshTheScreen(Short short){
+    setState(() {
+      _short=short;
+    });
   }
 
   void _onTap(){

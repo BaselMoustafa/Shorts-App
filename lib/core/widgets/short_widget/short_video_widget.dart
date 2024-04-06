@@ -50,7 +50,7 @@ class _ShortVideoWidgetState extends State<ShortVideoWidget> {
     });
 
     if(widget.playIt){
-      widget.videoController..setLooping(true);
+      widget.videoController..play()..setLooping(true);
     }
   }
 

@@ -17,7 +17,7 @@ import 'package:shorts_app/dependancies/shorts/domain/models/short_Info.dart';
 abstract class ShortsRemoteDataSource {
   const ShortsRemoteDataSource();
 
-  Future<List<Short>> getHomeShorts({required String personId,required int limit});
+  Future<List<Short>> getHomeShorts({required bool isFirstGet,required String personId,required int limit});
 
   Future<UploadedShortInfo> addShort({required NewShortInfo newShortInfo,});
 
@@ -41,7 +41,7 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
   final FireStoreHelper fireStoreHelper;
   final CloudStorageHelper cloudStorageHelper;
   final PersonsRemoteDataSource personsRemoteDataSource;
-  List<QueryDocumentSnapshot>_currentHomeShoresDocs=[];
+  List<QueryDocumentSnapshot>_currentHomeShortsDocs=[];
 
 
   ShortsRemoteDataSourceImpl({
@@ -72,21 +72,25 @@ class ShortsRemoteDataSourceImpl extends ShortsRemoteDataSource{
 
   @override
   Future<List<Short>> getHomeShorts({
+    required bool isFirstGet,
     required String personId,
     required int limit,
   }) async{
     return await _tryAndCatchBlock(
       message: "Failed To Get Home Shorts", 
       functionToExcute: ()async {
+        if(isFirstGet){
+          _currentHomeShortsDocs=[];
+        }
         GetCollectionOutput result=await fireStoreHelper.paginate(
           path: [KConst.shortsCollection,],
-          currentDocs: _currentHomeShoresDocs,
+          currentDocs: _currentHomeShortsDocs,
           fireStoreFilters: [
             const OrderByFilter(filedName: KConst.date,descending: true),
             LimitFilter(limit: limit)
           ]
         );
-        _currentHomeShoresDocs=result.docs;
+        _currentHomeShortsDocs=result.docs;
         return await _modelShorts(myPersonId: personId,shorts: result.data, personId: personId);
       },
     );

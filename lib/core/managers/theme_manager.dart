@@ -30,15 +30,10 @@ abstract class ThemeManager{
 
   static TextTheme _getTextTheme() =>const TextTheme(
 
-    headlineLarge: TextStyle(
-      color: ColorManager.white,
-      fontSize: 14,
-      fontWeight: FontWeight.bold,
-    ),
+    headlineLarge: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
     headlineMedium: TextStyle(
       color: ColorManager.white,
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
+      fontSize: 20,
     ),
     headlineSmall: TextStyle(
       color: ColorManager.white,
@@ -54,12 +49,12 @@ abstract class ThemeManager{
       fontWeight: FontWeight.bold,
     ),
     labelMedium: TextStyle(
-      color: ColorManager.black,
-      fontSize: 14,
+      color: ColorManager.white,
+      fontSize: 18,
       fontWeight: FontWeight.bold,
     ),
     labelSmall: TextStyle(
-      color: ColorManager.black,
+      color: ColorManager.white,
       fontSize: 16,
     ),
     ////////

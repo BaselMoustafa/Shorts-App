@@ -35,11 +35,13 @@ import 'package:shorts_app/features/authantication/Domain/usecases/check_email_v
 import 'package:shorts_app/features/authantication/Domain/usecases/send_email_verification_usecase.dart';
 import 'package:shorts_app/features/authantication/Domain/usecases/sign_in_with_email_and_password_usecase.dart';
 import 'package:shorts_app/features/authantication/Domain/usecases/sign_in_with_google_usecase.dart';
+import 'package:shorts_app/features/authantication/Domain/usecases/sign_out_usecase.dart';
 import 'package:shorts_app/features/authantication/Domain/usecases/sign_up_with_email_and_password_usecase.dart';
 import 'package:shorts_app/features/authantication/presentation/controllers/google_authantication_cubit/google_authantication_cubit.dart';
 import 'package:shorts_app/features/home/get_home_shorts_cubit/get_home_shorts_cubit.dart';
 import 'package:shorts_app/features/profile/controllers/follow_person_cubit/follow_or_unfollow_person_cubit.dart';
 import 'package:shorts_app/features/profile/controllers/get_profile_shorts_cubit/get_profile_shorts_cubit.dart';
+import 'package:shorts_app/features/profile/controllers/signout_cubit/sign_out_cubit.dart';
 import 'package:shorts_app/features/profile/controllers/update_my_person_cubit/update_my_person_cubit.dart';
 import 'package:shorts_app/features/search/search_persons_cubit/search_persons_cubit.dart';
 import '../../dependancies/persons/data/data_source/persons_local_data_source.dart';
@@ -76,6 +78,7 @@ class ServiceLocator {
     getIt.registerFactory(() => FollowOrUnfollowPersonCubit(followOrUnfollowPersonUsecase: getIt()));
     getIt.registerFactory(() => UpdateMyPersonCubit(updateMyPersonUsecase: getIt()));
     getIt.registerFactory(() => GetProfileShortsCubit(getProfileShortsUsecase: getIt()));
+    getIt.registerFactory(() => SignOutCubit(signOutUsecase: getIt()));
     //Search
     getIt.registerFactory(() => SearchPersonsCubit(searchPersonsUseCase: getIt()));
 
@@ -86,6 +89,7 @@ class ServiceLocator {
     getIt.registerLazySingleton(() => CheckEmailVerificationUsecase(authanticationReposatory: getIt()));
     getIt.registerLazySingleton(() => SignInWithGoogleUsecase(authanticationReposatory: getIt()));
     getIt.registerLazySingleton(() => SignInWithEmailAndPasswordUseCase(authanticationReposatory: getIt()));
+    getIt.registerLazySingleton(() => SignOutUsecase(authanticationReposatory: getIt()));
     //PERSONS
     getIt.registerLazySingleton(() => GetMyPersonUseCase(personsRepo: getIt(),),);
     getIt.registerLazySingleton(() => UpdateMyPersonUseCase(personsRepo: getIt(),),);

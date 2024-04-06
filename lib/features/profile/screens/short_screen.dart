@@ -14,7 +14,7 @@ class ShortScreen extends StatelessWidget {
       appBar: AppBar(backgroundColor: ColorManager.transparent,),
       body:ShortWidget(
         short: short,
-        onTapInfoWidget: () {
+        onTapInfoWidget: (_) {
           NavigatorManager.pop(context: context);
         },
       ),

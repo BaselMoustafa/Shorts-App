@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shorts_app/core/managers/color_manager.dart';
+import 'package:shorts_app/core/managers/theme_manager.dart';
 import 'package:shorts_app/core/models/image_details.dart';
 import 'package:shorts_app/core/widgets/profile_image_widget.dart';
 import 'package:shorts_app/dependancies/shorts/domain/models/short.dart';
@@ -56,7 +58,10 @@ class _ShortOwnerInfo extends StatelessWidget {
           imageDetails: short.from.image==null?null:NetworkImageDetails(url: short.from.image!),
         ),
         const SizedBox(width: 8,),
-        Text(short.from.name,style: Theme.of(context).textTheme.headlineLarge,),
+        Text(
+          short.from.name,
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
       ],
     );
   }
@@ -73,7 +78,7 @@ class _ShortDescribtion extends StatelessWidget {
         short.caption??"",
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
-        style: Theme.of(context).textTheme.headlineLarge,
+        style:const TextStyle(color: ColorManager.white),
       ),
     );
   }

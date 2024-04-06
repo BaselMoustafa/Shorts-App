@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shorts_app/dependancies/shorts/domain/models/short.dart';
 import 'package:shorts_app/dependancies/shorts/domain/models/short_Info.dart';
 import '../../features/add_short/screens/add_details_screen.dart';
@@ -23,7 +22,7 @@ void showMySnackBar({
       margin: const EdgeInsets.all(20),
       padding:const EdgeInsets.all(10),
       content: DefaultTextStyle(
-        style: Theme.of(context).textTheme.headlineMedium!, 
+        style:const TextStyle(color: ColorManager.white,fontSize: 16), 
         child: content,
       ),
     )
@@ -36,6 +35,7 @@ void showAddShortSuccessSnackBar({required BuildContext context,required Short s
     color: ColorManager.green,
     content:const Text("Successs At Upload"),
     snackBarAction: SnackBarAction(
+      textColor: ColorManager.white,
       label: "Show", 
       onPressed: ()=>NavigatorManager.push(context: context, widget: ShortScreen(short: short,)),
     ),

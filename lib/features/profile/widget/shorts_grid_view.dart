@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:shorts_app/core/models/video_controller_info.dart';
-import 'package:shorts_app/core/widgets/exception_widget.dart';
 import 'package:shorts_app/core/widgets/short_preview_widget.dart';
+import 'package:shorts_app/core/widgets/there_are_no_widget.dart';
 import '../../../core/managers/navigator_manager.dart';
 import '../../../dependancies/shorts/domain/models/short.dart';
 import '../screens/short_screen.dart';
@@ -12,9 +12,7 @@ class ShortsGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if(shorts.isEmpty){
-      return const ExceptionWidget(
-        message: "There Are No Shorts",
-      );
+      return const ThereAreNoWidget(label: "Shorts",);
     }
     return GridView.builder(
       shrinkWrap: true,

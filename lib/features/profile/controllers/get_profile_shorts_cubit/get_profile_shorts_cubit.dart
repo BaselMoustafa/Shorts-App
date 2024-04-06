@@ -20,6 +20,10 @@ class GetProfileShortsCubit extends Cubit<GetProfileShortsStates>{
   List<Short>_shorts=[];
   late String _currentPersonId="";
 
+  void init(){
+    _shorts=[];
+    emit(GetProfileShortsInitialState());
+  }
 
   Future<void>getProfileShorts(String userId)async{
     if(_currentPersonId==userId){

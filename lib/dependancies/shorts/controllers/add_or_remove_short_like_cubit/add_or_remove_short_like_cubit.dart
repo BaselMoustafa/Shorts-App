@@ -22,7 +22,6 @@ class AddOrRemoveShortLikeCubit extends Cubit<AddOrRemoveShortLikeStates>{
       return;
     }
     _inProgressShortIds.add(short.id);
-    print("WILL EMIT LOADING============================");
     emit(AddOrRemoveShortLikeLoading(short: _toggleLike(short)));
 
     Either<Failure,Unit>likedOrFailure=await addOrRemoveShortLikeUsecase.excute(short: short);

@@ -11,6 +11,8 @@ abstract class AuthanticationLocalDataSource extends Equatable{
   Unit setUserId(String userId);
   Unit setAuthanticationMethod(AuthanticationMethod authanticationMethod);
   Unit setPerson(MyPerson myPerson);
+  Future<AuthanticationMethod> getAuthanticationMethod();
+  Future<Unit> deleteLocalData();
   @override
   List<Object?> get props => [];
 }
@@ -56,6 +58,37 @@ class AuthanticationLocalDataSourceImpl extends AuthanticationLocalDataSource{
     );
   }
 
+  @override
+  Future<AuthanticationMethod> getAuthanticationMethod() async{
+    return _tryAndCatchBlock(
+      functionToExcute: () {
+        return _fromStringAuthanticationMethod(
+          hiveHelper.get(
+            boxName: KConst.dataBoxName, key: KConst.authanticationMethod
+          )
+        );
+      },
+    );
+  }
+
+  @override
+  Future<Unit> deleteLocalData() async{
+    return _tryAndCatchBlock(
+      message: "We have a problem, Please try again",
+      functionToExcute: () {
+        hiveHelper.delete(boxName: KConst.dataBoxName, key: KConst.userId);
+        hiveHelper.delete(boxName: KConst.dataBoxName, key: KConst.authanticationMethod);
+        return unit;
+      },
+    ); 
+  }
+
+  AuthanticationMethod _fromStringAuthanticationMethod(String string){
+    if(string=="emailAndPassword"){
+      return AuthanticationMethod.emailAndPassword;    
+    }
+    return AuthanticationMethod.google;
+  }
   
 
   T _tryAndCatchBlock<T>({

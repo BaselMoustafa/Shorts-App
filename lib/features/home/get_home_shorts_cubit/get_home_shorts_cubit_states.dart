@@ -8,7 +8,8 @@ class GetHomeShortsLoadingState extends GetHomeShortsStates{
 }
 class GetHomeShortsFailedState extends GetHomeShortsStates{
   final String message;
-  GetHomeShortsFailedState({required this.message});
+  final List<Short>shorts;
+  GetHomeShortsFailedState({required this.message,required this.shorts});
 }
 class GetHomeShortsSuccessState extends GetHomeShortsStates{
   final List<Short>shorts;

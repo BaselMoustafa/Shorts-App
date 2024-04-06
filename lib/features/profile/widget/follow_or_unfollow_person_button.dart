@@ -25,25 +25,13 @@ class _FollowOrUnfollowPersonButtonState extends State<FollowOrUnfollowPersonBut
   @override
   Widget build(BuildContext context) {
     return BlocListener<FollowOrUnfollowPersonCubit,FollowOrUnfollowPersonStates>(
-      listener: (context, state) {
-        if(state is FollowOrUnfollowPersonLoading && state.anotherPerson.id==_anotherPerson.id){
-          setState(() {
-            _anotherPerson=state.anotherPerson;
-          });
-        }
-        else if(state is FollowOrUnfollowPersonFailed && state.anotherPerson.id==_anotherPerson.id){
-          setState(() {
-            _anotherPerson=state.anotherPerson;
-          });
-        }
-      },
+      listener: _followOrUnfollowPersonBlocListener,
       child: CustomButton(
         height: 40,
         onTap: ()=>_onTap(context),
         child:Text(
           _anotherPerson.followedByMyPerson?"unfollow":"follow",
         ), 
-        
       ),
     );
   }
@@ -51,4 +39,20 @@ class _FollowOrUnfollowPersonButtonState extends State<FollowOrUnfollowPersonBut
   void _onTap(BuildContext context){
     FollowOrUnfollowPersonCubit.get(context).followOrUnfollowPerson(_anotherPerson);
   }
+
+  void _followOrUnfollowPersonBlocListener(context, state) {
+    if(state is FollowOrUnfollowPersonLoading && state.anotherPerson.id==_anotherPerson.id){
+      _refreshScreen(state.anotherPerson);
+    }
+    else if(state is FollowOrUnfollowPersonFailed && state.anotherPerson.id==_anotherPerson.id){
+      _refreshScreen(state.anotherPerson);
+    }
+  }
+
+  void _refreshScreen(AnotherPerson anotherPerson){
+    setState(() {
+      _anotherPerson=anotherPerson;
+    });
+  }
+  
 }

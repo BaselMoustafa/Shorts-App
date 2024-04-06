@@ -9,8 +9,8 @@ class GetHomeShortsUsecase extends Equatable{
 
   const GetHomeShortsUsecase({required this.shortsRepo});
 
-  Future<Either<Failure,List<Short>>> excute({required int limit})async{
-    return await shortsRepo.getHomeShorts(limit: limit);
+  Future<Either<Failure,List<Short>>> excute({required bool isFirstGet,required int limit})async{
+    return await shortsRepo.getHomeShorts(isFirstGet: isFirstGet,limit: limit);
   }
 
   @override

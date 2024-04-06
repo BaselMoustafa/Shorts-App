@@ -8,6 +8,7 @@ import '../../../../core/network/firebase/fire_store_helper/fire_store_helper.da
 import '../../../../core/network/firebase/fire_store_helper/update_info/fire_store_update.dart';
 import '../../../../core/network/firebase/fire_store_helper/update_info/update_method.dart';
 import '../../../../core/network/firebase/firebase_auth_helper/firebase_auth_helper.dart';
+import '../../../../dependancies/persons/domain/models/authantication_mehod_enum.dart';
 
 
 abstract class AuthanticationRemoteDataSource extends Equatable{
@@ -21,6 +22,7 @@ abstract class AuthanticationRemoteDataSource extends Equatable{
   Future<bool>thisPersonExistsAtDataBase(String userId);
   Future<Unit>setNewPersonToDataBase(MyPerson myPerson);
   Future<Unit>markPersonEmailAsVerified(String userId);
+  Future<Unit>signOut(AuthanticationMethod authanticationMethod);
   @override
   List<Object?> get props => [];
 }
@@ -33,6 +35,7 @@ class AuthanticationRemoteDataSourceImpl extends AuthanticationRemoteDataSource{
   @override
   Future<UserCredential> signUpWithEmailAndPassword({required String email, required String password}) async{
     return await _tryAndCatchBlock(
+      message:"Failed To Sign Up",
       functionToExcute: () async{
         return await firebaseAuthHelper.signUpWithEmailAndPassword(
           email: email,
@@ -45,6 +48,7 @@ class AuthanticationRemoteDataSourceImpl extends AuthanticationRemoteDataSource{
   @override
   Future<UserCredential> signInWithEmailAndPassword({required String email,required String password})async{
     return await _tryAndCatchBlock(
+      message:"Failed To Sign In",
       functionToExcute: () async{
         return await firebaseAuthHelper.signInWithEmailAndPassword(email: email, password: password);
       },
@@ -54,6 +58,7 @@ class AuthanticationRemoteDataSourceImpl extends AuthanticationRemoteDataSource{
   @override
   Future<GoogleUserInfo> signInWithGoogle() async {
     return await _tryAndCatchBlock(
+      message:"Failed To Sign In",
       functionToExcute: ()async {
         return await firebaseAuthHelper.signInWithGoogle();
       },
@@ -63,6 +68,7 @@ class AuthanticationRemoteDataSourceImpl extends AuthanticationRemoteDataSource{
   @override
   Future<Unit> sendEmailVerification()async{
     return await _tryAndCatchBlock(
+      message:"Failed To Send Eail Verfication",
       functionToExcute: () async{
         await firebaseAuthHelper.sendEmailVerification();
         return unit;
@@ -73,6 +79,7 @@ class AuthanticationRemoteDataSourceImpl extends AuthanticationRemoteDataSource{
   @override
   Future<User>checkEmailVerification()async{
     return await _tryAndCatchBlock(
+      message:"Failed To Check Email Verfication",
       functionToExcute: () async{
         return await firebaseAuthHelper.checkEmailVerification();
       },
@@ -82,6 +89,7 @@ class AuthanticationRemoteDataSourceImpl extends AuthanticationRemoteDataSource{
   @override
   Future<bool> thisPersonExistsAtDataBase(String userId)async {
     return await _tryAndCatchBlock(
+      message:"Please Try Again",
       functionToExcute: () async{
         return await fireStoreHelper.documentIsExists(
           path: [KConst.personsCollection, userId]
@@ -93,6 +101,7 @@ class AuthanticationRemoteDataSourceImpl extends AuthanticationRemoteDataSource{
   @override
   Future<Unit> setNewPersonToDataBase(MyPerson myPerson)async {
     return await  _tryAndCatchBlock(
+      message:"Please Try Again",
       functionToExcute: ()async{
         await fireStoreHelper.set(
           documentPath: [KConst.personsCollection,myPerson.id], 
@@ -106,6 +115,7 @@ class AuthanticationRemoteDataSourceImpl extends AuthanticationRemoteDataSource{
   @override
   Future<Unit> markPersonEmailAsVerified(String userId) async{
     return await _tryAndCatchBlock(
+      message:"Please Try Again",
       functionToExcute: () async{
         await fireStoreHelper.update(
           documentPath: [KConst.personsCollection,userId], 
@@ -118,16 +128,31 @@ class AuthanticationRemoteDataSourceImpl extends AuthanticationRemoteDataSource{
     );
   }
 
+  @override
+  Future<Unit> signOut(AuthanticationMethod authanticationMethod) async{
+    return _tryAndCatchBlock(
+      message:"Failed To Logout",
+      functionToExcute: ()async{
+        if(authanticationMethod==AuthanticationMethod.emailAndPassword){
+          await firebaseAuthHelper.emailSignOut();
+        }
+        await firebaseAuthHelper.googleSignOut();
+        return unit;
+      }, 
+    );
+  }
+
   Future<T> _tryAndCatchBlock<T>({
+    required String message,
     required Future<T>Function()functionToExcute,
   }){
     try {
       return functionToExcute();
     }on  AuthanticationException {
-      rethrow;
+      throw AuthanticationException(message: message);
     }
     catch (e) {
-      rethrow; 
+      throw AuthanticationException(message: message); 
     }
   }
   

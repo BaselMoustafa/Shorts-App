@@ -65,10 +65,10 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
                 const SliverToBoxAdapter(
                   child: SizedBox(height: 20,),
                 ),
-                SliverToBoxAdapter(
+                const SliverToBoxAdapter(
                   child: Text(
                   "Caption",
-                  style:Theme.of(context).textTheme.bodyMedium,
+                  style:TextStyle(fontSize: 16,color: ColorManager.white),
                 ),
                 ),
                 SliverToBoxAdapter(

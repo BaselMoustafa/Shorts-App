@@ -18,6 +18,12 @@ class GetShortCommentsCubit extends Cubit<GetShortCommentsStates>{
   String _currentShortId="";
   List<Comment>_comments=[];
 
+  void init(){
+    _comments=[];
+    _currentShortId="";
+    emit(GetShortCommentsInitial());
+  }
+
   Future<void>getShortComments({required String shortId})async{
     if(_currentShortId==shortId){
       emit(GetShortCommentsSuccess(comments: _comments));

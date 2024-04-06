@@ -34,5 +34,7 @@ class AddShortCommentButton extends StatelessWidget {
         to: short.from,
       ),
     );
+    commentController.clear();
+    FocusScope.of(context).unfocus();
   }
 }

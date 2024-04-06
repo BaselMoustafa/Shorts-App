@@ -46,39 +46,41 @@ class _ScreenDesignState extends State<_ScreenDesign> {
   @override
   Widget build(BuildContext context) {
     return GoogleAndEmailBlocListeners(
-      widget: GestureDetector(
-        onTap: () => FocusScope.of(context),
+      widget: SafeArea(
         child: Scaffold(
-          body: Form(
-            key: widget.widget.formKey,
-            child: ListView(
-              padding: const EdgeInsets.all(20),
-              children: [
-                Text(
-                  widget.widget.primaryText,
-                  style:const  TextStyle(color: ColorManager.primary,fontSize: 28,fontWeight: FontWeight.bold,),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  widget.widget.secondaryText,
-                  style: const TextStyle(color: ColorManager.grey),
-                ),
-                const SizedBox(height: 40,),
-                
-                for(int i=0;i<widget.widget.textFormFields.length;i++)
-                Padding(
-                  padding: EdgeInsets.only(bottom: i==widget.widget.textFormFields.length-1?0:10),
-                  child: widget.widget.textFormFields[i],
-                ),
-        
-                const SizedBox(height: 20,),
-                widget.widget.authanticationButton,
-                widget.widget.textButton,
-                const OrLineWidget(),
-                const SizedBox(height: 10,),
-                const GoogleSignInButton(),
-                
-              ],
+          body: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Form(
+              key: widget.widget.formKey,
+              child: ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  Text(
+                    widget.widget.primaryText,
+                    style:const  TextStyle(color: ColorManager.primary,fontSize: 28,fontWeight: FontWeight.bold,),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    widget.widget.secondaryText,
+                    style: const TextStyle(color: ColorManager.grey),
+                  ),
+                  const SizedBox(height: 40,),
+                  
+                  for(int i=0;i<widget.widget.textFormFields.length;i++)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: i==widget.widget.textFormFields.length-1?0:10),
+                    child: widget.widget.textFormFields[i],
+                  ),
+                    
+                  const SizedBox(height: 20,),
+                  widget.widget.authanticationButton,
+                  widget.widget.textButton,
+                  const OrLineWidget(),
+                  const SizedBox(height: 10,),
+                  const GoogleSignInButton(),
+                  
+                ],
+              ),
             ),
           ),
         ),

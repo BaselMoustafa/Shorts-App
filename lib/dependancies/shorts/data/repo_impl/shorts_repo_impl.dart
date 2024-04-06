@@ -35,10 +35,11 @@ class ShortsRepoImpl extends ShortsRepo{
   }
 
   @override
-  Future<Either<Failure,List<Short>>> getHomeShorts({required int limit})async{
+  Future<Either<Failure,List<Short>>> getHomeShorts({required bool isFirstGet,required int limit})async{
     return await _failureHandler(
       functionToExcute: () async{
         return await shortsRemoteDataSource.getHomeShorts(
+          isFirstGet: isFirstGet,
           limit: limit,
           personId: shortsLocalDataSource.userId(),
         );
